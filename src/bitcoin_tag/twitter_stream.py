@@ -4,7 +4,7 @@ import sys
 import time
 import os
 import schedule
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 from .models import HourModel, MonthModel, YearModel, DayModel  # MinutesModel
 import threading
 from .apps import RunThread
@@ -13,7 +13,6 @@ from .apps import RunThread
 class AuthenticationTweepy:
     def __init__(self):
         self.consumer_key = os.environ.get('consumer_key')
-        print("self.consumer_key", self.consumer_key)
         self.consumer_secret = os.environ.get('consumer_secret')
         self.access_token = os.environ.get('access_token')
         self.access_token_secret = os.environ.get('access_token_secret')
@@ -25,6 +24,7 @@ class AuthenticationTweepy:
         auth.set_access_token(self.access_token, self.access_token_secret)
         return auth
 
+
 class MyStreamListener(tweepy.StreamListener):
     def __init__(self, api, scheduler_time, scheduler):
         self.api = api
@@ -33,7 +33,7 @@ class MyStreamListener(tweepy.StreamListener):
         self.start_time = datetime.now()
         self.scheduler_time = scheduler_time
         self.stream_scheduler = scheduler
-    post_counter = 0
+    post_counter = 0  # static
 
     def on_connect(self):
         """Notify when user connected to twitter"""
@@ -45,9 +45,8 @@ class MyStreamListener(tweepy.StreamListener):
             print(self.histogram)
 
             obj = HourModel.objects.create(tag_dictionary=self.histogram,
-                                            tag_date=datetime.now().date(),
-                                            tag_time=datetime.now().time())
-
+                                           tag_date=datetime.now().date(),
+                                           tag_time=datetime.now().time())
 
             self.histogram = dict()
             print("histogram state after push_to_database_hour", self.histogram)
@@ -61,7 +60,6 @@ class MyStreamListener(tweepy.StreamListener):
         # schedule.cancel_job(stream_job)
 
         # .minutes.do(push_to_database_hour)
-
 
     def get_tags(self, text):
         '''return tags only'''
@@ -116,8 +114,9 @@ class MyStreamListener(tweepy.StreamListener):
 
 
 class StreamUserClient:
-    def __init__(self, time_limit, scheduler):
-        self.time_limit = time_limit
+    def __init__(self, time_scheduler, scheduler):
+        self.time_scheduler = time_scheduler
+        self.time_disconnect = self.time_scheduler + 10  # self.time_scheduler * 60 + 10
         self.start_time = datetime.now()
         self.stream_scheduler = scheduler
         self.auth = AuthenticationTweepy().authenticate()
@@ -126,22 +125,23 @@ class StreamUserClient:
 
     def run_stream(self):
         # create object of the streaming class, tweets are processed by on_status
-        tweets_listener = MyStreamListener(self.api, self.time_limit, self.stream_scheduler)
+        tweets_listener = MyStreamListener(self.api, self.time_scheduler, self.stream_scheduler)
         # send object to the twitter stream, send authentication and MyStreamListener class
         stream = tweepy.Stream(self.api.auth, tweets_listener)
         # filter allows us to choose proper filter which are showed, empty means everything
         stream.filter(track=['#bitcoin'], languages=["en"], is_async=True)
 
+
         # time.sleep(301)  # after time start disconnecting stream
-        time.sleep(10)  # after time start disconnecting stream
-        print("stream.filter end")
+        time.sleep(self.time_disconnect)  # after time start disconnecting stream
+        print("???????????????????????????????????????????????????????????stream.filter end")
         self.stream_scheduler.clear('stream_job')
         stream.disconnect()
 
 # my_stream = StreamUserCommands()
 # my_stream.run_stream()
 
-# TODO: GIT
 # TODO: schedule 5min every per 1 hour and time_out 5min as a class argument
 # TODO: make tests
+# TODO: last changes in backend
 # Finish frontend

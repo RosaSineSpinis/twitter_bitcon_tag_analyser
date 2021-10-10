@@ -14,6 +14,7 @@ class RunThread:
         job_thread = threading.Thread(target=job_func)
         job_thread.start()
 
+
 class StreamNewThread(Thread):
 
     def run(self):
@@ -28,7 +29,7 @@ class StreamNewThread(Thread):
             del obj
 
         def run_stream():
-            my_stream = StreamUserClient(timedelta(seconds=30), main_scheduler)
+            my_stream = StreamUserClient(30, main_scheduler)
             my_stream.run_stream()
             del my_stream
 
@@ -56,7 +57,6 @@ class StreamNewThread(Thread):
             time.sleep(1)
             for thread in threading.enumerate():
                 print(thread.name)
-
 
 
 class BitcoinTagConfig(AppConfig):
