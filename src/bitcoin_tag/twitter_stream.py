@@ -5,7 +5,7 @@ import time
 import os
 import schedule
 from datetime import timedelta, datetime
-from .models import HourModel, MonthModel, YearModel, DayModel  # MinutesModel
+from .models import HourModel, MonthModel, DayModel  # YearModel, MinutesModel
 import threading
 from .apps import RunThread
 
@@ -55,7 +55,8 @@ class MyStreamListener(tweepy.StreamListener):
             # schedule.cancel_job(stream_job)
 
         # stream_job = schedule.every(15).seconds.do(push_to_database_hour)
-        stream_job = self.stream_scheduler.every(self.scheduler_time).seconds.do(RunThread.run_threaded, push_to_database_hour).tag('stream_job')
+        stream_job = self.stream_scheduler.every(self.scheduler_time).seconds.do(
+            RunThread.run_threaded, push_to_database_hour).tag('stream_job')
         print()
         # schedule.cancel_job(stream_job)
 
@@ -134,7 +135,7 @@ class StreamUserClient:
 
         # time.sleep(301)  # after time start disconnecting stream
         time.sleep(self.time_disconnect)  # after time start disconnecting stream
-        print("???????????????????????????????????????????????????????????stream.filter end")
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^stream.filter end")
         self.stream_scheduler.clear('stream_job')
         stream.disconnect()
 
@@ -143,5 +144,5 @@ class StreamUserClient:
 
 # TODO: schedule 5min every per 1 hour and time_out 5min as a class argument
 # TODO: make tests
-# TODO: last changes in backend
+# TODO: last changes in frontend
 # Finish frontend

@@ -5,15 +5,15 @@ from django.db import models
 from picklefield.fields import PickledObjectField
 
 
-class YearModel(models.Model):
-    tag_dictionary = PickledObjectField()
-    tag_date = models.DateField(auto_now_add=False)  # date of save
-    tag_time = models.TimeField(auto_now_add=False)  # time of save
-    beginning_datetime = models.DateTimeField(blank=False)  # comes from MonthModel
-    ending_datetime = models.DateTimeField(blank=False)  # comes from MonthModel
-
-    def __str__(self):
-        return f'{self.tag_date} {self.tag_time}'
+# class YearModel(models.Model):
+#     tag_dictionary = PickledObjectField()
+#     tag_date = models.DateField(auto_now_add=False)  # date of save
+#     tag_time = models.TimeField(auto_now_add=False)  # time of save
+#     beginning_datetime = models.DateTimeField(blank=False)  # comes from MonthModel
+#     ending_datetime = models.DateTimeField(blank=False)  # comes from MonthModel
+#
+#     def __str__(self):
+#         return f'{self.tag_date} {self.tag_time}'
 
 
 class MonthModel(models.Model):
@@ -42,6 +42,7 @@ class HourModel(models.Model):
     tag_dictionary = PickledObjectField()  # dictionary of tags --> {#tagname: number}
     tag_date = models.DateField(auto_now_add=False)  # date of tag save
     tag_time = models.TimeField(auto_now_add=False)  # time of tag save
+    tag_datetime = models.DateTimeField(auto_now_add=False)
 
     def __str__(self):
         return f'{self.tag_date} {self.tag_time}'

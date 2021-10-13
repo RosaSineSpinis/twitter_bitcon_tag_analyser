@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from .models import HourModel, MonthModel, YearModel, DayModel  # MinutesModel
-
+from .models import HourModel, MonthModel, DayModel  #YearModel, MinutesModel
+from django.utils import timezone
 
 class CreateEntryDay:
 
@@ -78,24 +78,27 @@ class CreateEntryDay:
 
 
 class RemoveEntries:
-    def __init__(self):
-        self.beg_time = ""
-        self.end_time = ""
-        self.beg_date = ""
-        self.end_date = ""
+    def __init__(self, cutoff_datetime):
+        self.cutoff_datetime = datetime.now(tz=timezone.utc) - cutoff_datetime
+        # self.time = self.date_and_time.time()
+        # self.date = self.date_and_time.date()
 
     def remove_entries(self):
         pass
 
 
 class RemoveHourEntries(RemoveEntries):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, time_cutoff):
+        super().__init__(time_cutoff)
 
     def remove_entries(self):
         # objs = HourModel.objects.get(tag_date__exact=datetime.now().date() - timedelta(days=4)).delete()  # final version
-        objs = HourModel.objects.get(tag_time__exact=datetime.now().time() - timedelta(minutes=5)).delete()
-
+        # objs = HourModel.objects.get(tag_time__exact=datetime.now().time() - timedelta(minutes=5)).delete()
+    #     filter
+        HourModel.objects.filter(tag_datetime__lte=self.cutoff_datetime).delete()
+        print("remove database is working")
+        # question is: change to datetime or leave date and time
+        # for now I think it is better to use datetime
 
     # 2
     # remove older entries than x days - this scenario 3

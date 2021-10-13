@@ -14,13 +14,10 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print("BASE_DIR", BASE_DIR)
 BASE_SOURCE = Path(__file__).resolve().parent
-print("BASE_PROJECT", BASE_SOURCE)
 # Use a separate file for the secret key
 with open(os.path.join(BASE_SOURCE, 'Secret_Key.txt')) as f:
     SECRET_KEY = f.read().strip()
-    print("SECRET_KEY", SECRET_KEY)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
