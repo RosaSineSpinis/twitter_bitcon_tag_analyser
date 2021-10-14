@@ -8,6 +8,7 @@ from datetime import timedelta, datetime
 from .models import HourModel, MonthModel, DayModel  # YearModel, MinutesModel
 import threading
 from .apps import RunThread
+from django.utils import timezone
 
 
 class AuthenticationTweepy:
@@ -35,28 +36,31 @@ class MyStreamListener(tweepy.StreamListener):
         self.stream_scheduler = scheduler
     post_counter = 0  # static
 
+    def push_to_database_hour(self):
+        print("******************************* test is working *******************************************")
+        print(self.histogram)
+
+        obj = HourModel.objects.create(tag_dictionary=self.histogram,
+                                       tag_date=datetime.now(tz=timezone.utc).date(),
+                                       tag_time=datetime.now(tz=timezone.utc).time(),
+                                       tag_datetime=datetime.now(tz=timezone.utc))
+
+        self.histogram = dict()
+        print("histogram state after push_to_database_hour", self.histogram)
+        now = datetime.now().time()  # time object
+        print("now =", now)
+        # schedule.cancel_job(stream_job)
+
     def on_connect(self):
         """Notify when user connected to twitter"""
         print("Connected to Twitter API!")
         print("Histogram variable on_connect", self.histogram)
 
-        def push_to_database_hour():
-            print("******************************* test is working *******************************************")
-            print(self.histogram)
 
-            obj = HourModel.objects.create(tag_dictionary=self.histogram,
-                                           tag_date=datetime.now().date(),
-                                           tag_time=datetime.now().time())
-
-            self.histogram = dict()
-            print("histogram state after push_to_database_hour", self.histogram)
-            now = datetime.now().time()  # time object
-            print("now =", now)
-            # schedule.cancel_job(stream_job)
 
         # stream_job = schedule.every(15).seconds.do(push_to_database_hour)
         stream_job = self.stream_scheduler.every(self.scheduler_time).seconds.do(
-            RunThread.run_threaded, push_to_database_hour).tag('stream_job')
+            RunThread.run_threaded, self.push_to_database_hour).tag('stream_job')
         print()
         # schedule.cancel_job(stream_job)
 

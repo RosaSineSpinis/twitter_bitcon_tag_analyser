@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from .models import HourModel, MonthModel, DayModel  #YearModel, MinutesModel
 from django.utils import timezone
 
-class CreateEntryDay:
 
+class CreateEntry:
     def __init__(self):
         print("constructor CreateEntryDay is working")
         self.histogram = {}
@@ -13,12 +13,12 @@ class CreateEntryDay:
         self.ending_date = ""
 
     def _create_hist_day(self):
-        print("create_hist_month is working")
+        """ add instance of model to the class"""
         # change to equal date
         # objs = HourModel.objects.filter(tag_date__gte=datetime.now().date() - timedelta(days=1)).all()  # use in the
         # final version
         # objs = HourModel.objects.filter(tag_date__gte=datetime.now().date() - timedelta(minutes=3)).all() #  test 1
-        objs = HourModel.objects.all().order_by('tag_date', 'tag_time')  # test 2
+        objs = None
         # beg_time = 0
         # end_time = 0
         if objs:
@@ -37,6 +37,7 @@ class CreateEntryDay:
               self.ending_date)
 
         return objs
+
         # self.beginning_date = objs.first()  # here all should have the same dates as we take 1 day
         # print("self.beginning_day = objs.first()", self.beginning_date)
         # if self.beginning_date:
@@ -58,6 +59,27 @@ class CreateEntryDay:
         #     self.beginning_time = beg_time
         #     self.ending_time = end_time
 
+
+class CreateEntryDay(CreateEntry):
+
+    def __init__(self):
+        print("constructor CreateEntryDay is working")
+        self.histogram = {}
+        self.beginning_time = ""
+        self.ending_time = ""
+        self.beginning_date = ""
+        self.ending_date = ""
+
+    def _create_hist_day(self):
+        print("create_hist_month is working")
+        # change to equal date
+        # objs = HourModel.objects.filter(tag_date__gte=datetime.now().date() - timedelta(days=1)).all()  # use in the
+        # final version
+        # objs = HourModel.objects.filter(tag_date__gte=datetime.now().date() - timedelta(minutes=3)).all() #  test 1
+        objs = HourModel.objects.all().order_by('tag_date', 'tag_time')  # test 2
+        super()._create_hist_day()
+
+
     def create_day_entry(self):  # think about class
         objs = self._create_hist_day()
         print("self.beginning_date", self.beginning_date)
@@ -67,6 +89,24 @@ class CreateEntryDay:
 
         try:
             obj = DayModel.objects.create(tag_dictionary=self.histogram,
+                                          beginning_datetime=(datetime.combine(self.beginning_date, self.beginning_time)),
+                                          ending_datetime=(datetime.combine(self.ending_date, self.ending_time)))
+        except ValueError:
+            print("An ValueError exception occurred")
+        except BaseException:
+            print("something wrong!!! while object is created")
+
+        print("create_day_entry obj eof", obj)
+
+    def create_month_entry(self):  # think about class
+        objs = self._create_hist_day()
+        print("self.beginning_date", self.beginning_date)
+        print("self.beginning_time", self.beginning_time)
+        print("self.ending_date", self.ending_date)
+        print("self.ending_time",  self.ending_time)
+
+        try:
+            obj = MonthModel.objects.create(tag_dictionary=self.histogram,
                                           beginning_datetime=(datetime.combine(self.beginning_date, self.beginning_time)),
                                           ending_datetime=(datetime.combine(self.ending_date, self.ending_time)))
         except ValueError:
