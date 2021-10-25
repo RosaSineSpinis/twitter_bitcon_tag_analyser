@@ -20,6 +20,7 @@ class MonthModel(models.Model):
     tag_dictionary = PickledObjectField()
     tag_date = models.DateField(auto_now_add=True)  # date of save
     tag_time = models.TimeField(auto_now_add=True)  # time of save
+    tag_datetime = models.DateTimeField(auto_now_add=True)  #, blank=True, null=True)
     beginning_datetime = models.DateTimeField(blank=False)  # comes from HourModel the earliest object
     ending_datetime = models.DateTimeField(blank=False)  # comes from HourModel the latest object
 
@@ -31,8 +32,9 @@ class DayModel(models.Model):
     tag_dictionary = PickledObjectField()
     tag_date = models.DateField(auto_now_add=True)  # date of save
     tag_time = models.TimeField(auto_now_add=True)  # time of save
-    beginning_datetime = models.DateTimeField(blank=False)  # comes from HourModel the earliest object
-    ending_datetime = models.DateTimeField(blank=False)  # comes from HourModel the latest object
+    tag_datetime = models.DateTimeField(auto_now_add=True)  #, blank=True, null=True)
+    beginning_datetime = models.DateTimeField(blank=False, null=True)  # comes from HourModel the earliest object
+    ending_datetime = models.DateTimeField(blank=False, null=True)  # comes from HourModel the latest object
 
     def __str__(self):
         return f'{self.tag_date} {self.tag_time}'

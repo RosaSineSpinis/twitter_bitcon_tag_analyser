@@ -19,6 +19,6 @@ from .views import ChartData, home
 
 urlpatterns = [
     path('home/', home, name='home'),
-    path('data/', ChartData.as_view(), name='home'),
+    path('data/', ChartData.as_view(), name='data_chart'),
 
 ]

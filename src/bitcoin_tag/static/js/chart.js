@@ -12,7 +12,8 @@
     // console.log("createInputOption", date_time.format("Do, MM, YYYY, h:mm"))
     _date_time = _date_time.format("Do, MM, YYYY, h:mm");
 
-    var myChart =  new Chart(ctx, {
+    // var myChart =  new Chart(ctx, {
+    tagsChart =  new Chart(ctx, {
         type: 'bar',
         data: {
             labels: _data_keys,  //labels
@@ -44,5 +45,5 @@
              }
         }
     });
-    return myChart
+    return tagsChart
 }

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import HourModel, DayModel, MonthModel
 
 
-class MonthModel(serializers.ModelSerializer):
+class MonthSerializer(serializers.ModelSerializer):
 
     dictionary_tags = serializers.SerializerMethodField('_get_serialized_dict')
 

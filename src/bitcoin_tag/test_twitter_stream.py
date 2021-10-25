@@ -11,7 +11,19 @@ class HourModelTestCase(TestCase):
 
     def setUp(self) -> None:
         print("setUp working")
+        self.cutoff = 10
         self.number_entries = 4
+        early_date_minutes = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(minutes=self.cutoff)
+
+        HourModel.objects.create(tag_dictionary={"#bitcoin": 1, "#eth": 1, "#smth": 1},
+                                 tag_date=datetime.datetime.now(tz=timezone.utc).date(),
+                                 tag_time=datetime.datetime.now(tz=timezone.utc).time(),
+                                 tag_datetime=datetime.datetime.now(tz=timezone.utc))
+
+        HourModel.objects.create(tag_dictionary={"#bitcoin": 2, "#eth": 2, "#smth": 2},
+                                 tag_date=early_date_minutes.date(),
+                                 tag_time=early_date_minutes.time(),
+                                 tag_datetime=early_date_minutes)
 
     # @patch('bitcoin_tag.twitter_stream.MyStreamListener')
     @patch('bitcoin_tag.twitter_stream.tweepy.StreamListener')
@@ -20,6 +32,7 @@ class HourModelTestCase(TestCase):
     def test_push_to_database_hour(self, MockStreamListener, mock_api, mock_scheduler):
 
         # mock_myStreamListener = MyStreamListener()
-        MyStreamListener(mock_api, 10, mock_scheduler).push_to_database_hour()
+        obj = MyStreamListener(mock_api, 10, mock_scheduler)
+        obj.histogram = {"#bitcoin": 1, "#eth": 1}
+        obj.push_to_database_hour()
         self.assertTrue(HourModel.objects.count(), 1)
-        # api, scheduler_time, scheduler

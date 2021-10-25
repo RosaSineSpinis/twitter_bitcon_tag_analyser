@@ -31,7 +31,6 @@ class MyStreamListener(tweepy.StreamListener):
         self.api = api
         self.me = api.me()
         self.histogram = dict()
-        self.start_time = datetime.now()
         self.scheduler_time = scheduler_time
         self.stream_scheduler = scheduler
     post_counter = 0  # static
@@ -47,8 +46,8 @@ class MyStreamListener(tweepy.StreamListener):
 
         self.histogram = dict()
         print("histogram state after push_to_database_hour", self.histogram)
-        now = datetime.now().time()  # time object
-        print("now =", now)
+        # now = datetime.now().time()  # time object
+        # print("now =", now)
         # schedule.cancel_job(stream_job)
 
     def on_connect(self):

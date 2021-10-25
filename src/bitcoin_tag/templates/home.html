@@ -48,7 +48,6 @@
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
 </header>
 
 <div class="container-fluid">
@@ -63,30 +62,26 @@
 
         <ul class="nav flex-column mt-1">
           <li class="nav-item">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="radioButton--year" value="year">
-              <label class="form-check-label" for="radioButton--year">
-              Year
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="radioButton--month" value="month">
-              <label class="form-check-label" for="radioButton--month">
-              Month
-              </label>
+            <form action="{% url 'data_chart' %}" class="" method="POST">{% csrf_token %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="dataset" id="radioButton--month" value="month">
+                <label class="form-check-label" for="radioButton--month">
+                Month
+                </label>
+                </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="dataset" id="radioButton--day" value="day" >
+                <label class="form-check-label" for="radioButton--day">
+                Day
+                </label>
               </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="radioButton--day" value="day">
-              <label class="form-check-label" for="radioButton--day">
-              Day
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="radioButton--minutes" value="minutes" checked>
-              <label class="form-check-label" for="radioButton--day">
-              15 minutes
-              </label>
-            </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="dataset" id="radioButton--hour" value="hour" checked>
+                <label class="form-check-label" for="radioButton--hour">
+                Hour
+                </label>
+              </div>
+            </form>>
           </li>
 
         </ul>
@@ -124,9 +119,9 @@
           </div>
         </div>
       </div>
-
+      <div id="canvas">
       <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
+      </div>
       <div class="d-flex justify-content-between">
         <h2>Histogram of tags</h2>
         <span id="button--rePlot--here"><input type="button" class="btn btn-outline-dark" value="Plot Histogram" id="button--rePlot"></span>
