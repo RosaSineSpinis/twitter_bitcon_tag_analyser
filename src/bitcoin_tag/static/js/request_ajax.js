@@ -39,7 +39,7 @@ document.body.addEventListener('click', function (event) {
 
                 })
 
-                process_drawing_tasks()
+                process_drawing_tasks(data)
 
                 //newTable = createTable([
                 //   {order: 1, tag_name: '#btc', number: 5, date: '01-10-06', time: '11.11'},
@@ -73,7 +73,7 @@ var hatEvalData = document.getElementById("radioButton--hour");
 hatEvalData.click();
 
 
-function process_drawing_tasks() {
+function process_drawing_tasks(data) {
                     // check if graph is already created if no destroy
                     for (let i = 0; i < charts_list.length; i++) {
                         charts_list[i].destroy()
@@ -81,7 +81,7 @@ function process_drawing_tasks() {
                     }
                     charts_list = []
                     create_graphs(data[0])
-    
+
                     // let dataStorage = window.sessionStorage;
                     dataStorage.setItem("data", JSON.stringify(data))
                     let new_data = JSON.parse(dataStorage.getItem("data")) //

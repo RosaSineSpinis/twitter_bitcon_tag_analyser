@@ -137,7 +137,7 @@ class StreamUserClient:
 
 
         # time.sleep(301)  # after time start disconnecting stream
-        time.sleep(self.time_disconnect)  # after time start disconnecting stream
+        time.sleep(self.time_disconnect)  # after time start disconnecting stream in seconds
         print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^stream.filter end")
         self.stream_scheduler.clear('stream_job')
         stream.disconnect()
@@ -145,7 +145,4 @@ class StreamUserClient:
 # my_stream = StreamUserCommands()
 # my_stream.run_stream()
 
-# TODO: schedule 5min every per 1 hour and time_out 5min as a class argument
-# TODO: make tests
-# TODO: last changes in frontend
 # Finish frontend

@@ -71,29 +71,21 @@ class StreamNewThread(Thread):
         from .database_operation import CreateEntryDay
         print("After import")
 
-        def fun(obj):
-            print("del function works")
-            del obj
 
         # def run_stream():
         #     my_stream = StreamUserClient(10, main_scheduler)
         #     my_stream.run_stream()
         #     del my_stream
 
-        # RunThread.run_threaded(self.run_stream)
 
-        # schedule.every(30).seconds.do(fun, my_stream)
-        # def run_threaded(job_func):
-        #     job_thread = threading.Thread(target=job_func)
-        #     job_thread.start()
-        #
-        self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
-        self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
-        self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
+        # scheduler for tests
+        # self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
+        # self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
+        # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
 
-        # main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, run_stream)  # run stream
-        # main_scheduler.every().hour.at(":10").do(RunThread.run_threaded, CreateEntryDay().create_day_entry)  # rewrite database
-
+        self.main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
+        self.main_scheduler.every().day.at(":10").do(RunThread.run_threaded, self.day_task)  # rewrite database
+        self.main_scheduler.every().day.at(":10").do(RunThread.run_threaded, self.month_task)
 
         # schedule.every(50).seconds.do(my_stream.run_stream)
         # .minutes.do(StreamNewThread().start)
@@ -109,16 +101,18 @@ class StreamNewThread(Thread):
     def day_task(self):
         from .database_operation import CreateEntryDay, RemoveHourEntries
         CreateEntryDay().create_entry()
-        RemoveHourEntries().remove_entries()  # timedelta(seconds=90)
+        RemoveHourEntries().remove_entries()
 
     def month_task(self):
         from .database_operation import CreateEntryMonth, RemoveDayEntries
-        CreateEntryMonth().create_entry()
-        RemoveDayEntries().remove_entries()  # timedelta(seconds=200)
+        if datetime.today().day == 1:
+            CreateEntryMonth().create_entry()
+            RemoveDayEntries().remove_entries()
+        return
 
     def run_stream(self):
         from .twitter_stream import StreamUserClient
-        my_stream = StreamUserClient(15, self.main_scheduler)
+        my_stream = StreamUserClient(300, self.main_scheduler)  # scheduler will work for 300 sec
         my_stream.run_stream()
         del my_stream
 

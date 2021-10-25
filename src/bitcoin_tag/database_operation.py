@@ -116,7 +116,6 @@ class CreateEntryDay(CreateEntry):
         #     print("Type Error create_entry")
 
 
-
 class CreateEntryMonth(CreateEntry):
     def create_hist(self):
         print("create_hist_month is working")
