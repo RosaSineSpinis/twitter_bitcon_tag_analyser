@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+from Secret_Key import key_django
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_SOURCE = Path(__file__).resolve().parent
@@ -22,8 +23,8 @@ with open(os.path.join(BASE_SOURCE, 'Secret_Key.txt')) as f:
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&-q^1=i5t&sdp6q##v0w*$e_5%*=hx$45ajb!9nw7u_3sw@wry'
-
+SECRET_KEY = key_django
+# django-insecure-&-q^1=i5t&sdp6q##v0w*$e_5%*=hx$45ajb!9nw7u_3sw@wry
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
