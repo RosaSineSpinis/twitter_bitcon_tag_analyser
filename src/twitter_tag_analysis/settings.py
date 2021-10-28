@@ -12,13 +12,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from Secret_Key import key_django
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_SOURCE = Path(__file__).resolve().parent
 # Use a separate file for the secret key
-with open(os.path.join(BASE_SOURCE, 'Secret_Key.txt')) as f:
-    SECRET_KEY = f.read().strip()
+with open(os.path.join(BASE_SOURCE, 'Secret_Key.py')) as f:
+    key_django = f.read().strip()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
