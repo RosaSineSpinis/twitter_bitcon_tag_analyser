@@ -1,4 +1,5 @@
  function setChart(data, ctx){
+    console.log("setChart: beginning of the function")
     let _data = data
 
      let _data_keys = []

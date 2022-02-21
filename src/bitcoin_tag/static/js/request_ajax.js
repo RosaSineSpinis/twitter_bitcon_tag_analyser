@@ -14,6 +14,7 @@ document.body.addEventListener('click', function (event) {
         request.open(form.method, form.action, true);
 
         request.send(data_form);
+        console.log("data_form: ", data_form)
         // var dataStorage = window.sessionStorage
         // let currentDataset = 0
 
@@ -55,6 +56,7 @@ document.body.addEventListener('click', function (event) {
         });
         request.onerror = function() {
           // There was a connection error of some sort
+            console.log("request.onerror")
         };
 
     }
@@ -77,7 +79,7 @@ function process_drawing_tasks(data) {
                     // check if graph is already created if no destroy
                     for (let i = 0; i < charts_list.length; i++) {
                         charts_list[i].destroy()
-                        console.log("destroying")
+                        console.log("process_drawing_tasks: destroying")
                     }
                     charts_list = []
                     create_graphs(data[0])
@@ -92,4 +94,5 @@ function process_drawing_tasks(data) {
                     removeTableOfTags()  //remove table if table exists
                     let obj = new MakeTable(new_data[currentDataset], ['order', 'tag_name', 'number', 'date', 'time', 'checkbox'], ['#', 'Tag Name', 'Number', 'Date', 'Time', 'checkbox']);
                     obj.createTable(obj.convertDictData(), obj.list_of_keys, obj.list_of_names);
+                    console.log("process_drawing_tasks: end of function")
                 }

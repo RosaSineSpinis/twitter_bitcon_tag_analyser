@@ -1,0 +1,22 @@
+branch-defaults:
+  default:
+    environment: tag-analsis-env
+    group_suffix: null
+environment-defaults:
+  bitcoin-env:
+    branch: null
+    repository: null
+global:
+  application_name: twitter_tag_analysis
+  branch: null
+  default_ec2_keyname: null
+  default_platform: Python
+  default_region: eu-central-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: null
+  workspace_type: Application

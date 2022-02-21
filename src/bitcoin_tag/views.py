@@ -17,8 +17,8 @@ from rest_framework import mixins
 
 def home(request):
 
-    objs = Test.objects.create(user_name="testName", user_surname="TestSurname")
-    objs.save()
+    # objs = Test.objects.create(user_name="testName", user_surname="TestSurname")
+    # objs.save()
 
     # objs = MinutesModel.objects.all()
     #
@@ -52,11 +52,13 @@ class ChartData(generics.ListAPIView, mixins.CreateModelMixin):  # (): generics.
         :return: dictionary converted to JSON
         """
         # serializer_class = HourSerializer
+        print("post: request", request)
         dataset_kind = request.POST.get('dataset')  # name of dictionary
-        print(dataset_kind)
+        print("dataset_kind", dataset_kind)
         if dataset_kind == "hour":
             ChartData.serializer_class = HourSerializer
             ChartData.queryset = HourModel.objects.all()  # query whole database in the final version
+            print("ChartData.queryset", ChartData.queryset)
             return self.list(request, *args, **kwargs)
         elif dataset_kind == "day":
             ChartData.serializer_class = DaySerializer

@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bitcoin_tag/', include('bitcoin_tag.urls')),
+    path('', RedirectView.as_view(url='/bitcoin_tag/home/')),
 ]

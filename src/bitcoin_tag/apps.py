@@ -16,11 +16,18 @@ class RunThread:
         job_thread = threading.Thread(target=job_func)
         job_thread.start()
 
-
 class StreamNewThread(Thread):
 
+    @staticmethod
+    def migrations():
+        """function created only to populate database"""
+        from .models import MonthModel, DayModel, HourModel
+        print("HourModel all", HourModel.objects.all())
+        DayModel.objects.all()
+        MonthModel.objects.all()
+
     def front_end_tests(self):
-        """function created only to test front end, remove at the end"""
+        """function created only for the frontend test purposes, remove at the end"""
         from .models import MonthModel, DayModel, HourModel
 
         HourModel.objects.create(tag_dictionary={"#btc": 3, "#eth": 4, "#ehh": 4, "#ehggg": 6, "#efff": 5, "#ehgg": 4, "#ehrr": 4, "#ehhhhh": 5, "#eh": 4, "#ehhh": 5, "#mhm": 1},
@@ -61,8 +68,10 @@ class StreamNewThread(Thread):
                                   beginning_datetime=datetime.now(tz=timezone.utc) - relativedelta(months=2),
                                   ending_datetime=datetime.now(tz=timezone.utc) - relativedelta(months=3))
 
+        print("front end test is happening")
+        print("query all ", HourModel.objects.all())
 
-    def run(self):  # can be replaced with the constructor
+    def run(self):  # can be replaced with the constructor, otherwise start automatically
 
         self.main_scheduler = schedule.Scheduler()
 
@@ -77,15 +86,22 @@ class StreamNewThread(Thread):
         #     my_stream.run_stream()
         #     del my_stream
 
+        # '''
+        # #### for thest puropses only
+        # self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.front_end_tests)  # run stream
+        # '''
 
         # scheduler for tests
         # self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
         # self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
         # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
 
+        # '''
+        # #### real part of the program
         self.main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
-        self.main_scheduler.every().day.at(":10").do(RunThread.run_threaded, self.day_task)  # rewrite database
-        self.main_scheduler.every().day.at(":10").do(RunThread.run_threaded, self.month_task)
+        self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.day_task)  # rewrite database
+        self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.month_task)
+        # '''
 
         # schedule.every(50).seconds.do(my_stream.run_stream)
         # .minutes.do(StreamNewThread().start)
@@ -100,11 +116,13 @@ class StreamNewThread(Thread):
 
     def day_task(self):
         from .database_operation import CreateEntryDay, RemoveHourEntries
+        print("day task")
         CreateEntryDay().create_entry()
         RemoveHourEntries().remove_entries()
 
     def month_task(self):
         from .database_operation import CreateEntryMonth, RemoveDayEntries
+        print("month task")
         if datetime.today().day == 1:
             CreateEntryMonth().create_entry()
             RemoveDayEntries().remove_entries()
@@ -112,20 +130,22 @@ class StreamNewThread(Thread):
 
     def run_stream(self):
         from .twitter_stream import StreamUserClient
+        print("run_stream function, hour task")
         my_stream = StreamUserClient(300, self.main_scheduler)  # scheduler will work for 300 sec
         my_stream.run_stream()
         del my_stream
 
     def scheduler_loop(self):
+        """ uncomment if you want debug """
         while True:
             all_jobs = self.main_scheduler.get_jobs()
-            print("while loop working all_jobs", all_jobs)
+            # print("while loop working all_jobs", all_jobs)
+            # for idx, job in enumerate(all_jobs):
+            #     print("idx ", idx, "job ", job)
             self.main_scheduler.run_pending()
             time.sleep(1)
-            for thread in threading.enumerate():
-                print(thread.name)
-
-
+            # for thread in threading.enumerate():
+            #     print(thread.name)
 
 
 class BitcoinTagConfig(AppConfig):
@@ -134,8 +154,13 @@ class BitcoinTagConfig(AppConfig):
     #own
     verbose_name = "bitcoin_tag"
 
+    # def ready(self):
+    #     # StreamNewThread().front_end_tests()  # only for test of the frontend
+    #     StreamNewThread.migrations()  # to populate database
+
     def ready(self):
         if os.environ.get('RUN_MAIN') != 'true':
             print("BitcoinTagConfig.ready works")
-
-            # StreamNewThread().start()
+    #         # StreamNewThread().front_end_tests()  # only for test of the frontend
+    #
+            StreamNewThread().start()

@@ -23,7 +23,7 @@ class ConvertDict {
 
 
   convertDictData() {
-
+    console.log("convertDictData: beggining of the function")
     /** creates list of dictionaries (objects)
     data we have
        "tag_date": "2021-09-22",

@@ -24,11 +24,10 @@ with open(os.path.join(BASE_SOURCE, 'Secret_Key.py')) as f:
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = key_django
-# django-insecure-&-q^1=i5t&sdp6q##v0w*$e_5%*=hx$45ajb!9nw7u_3sw@wry
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'bitcoin-analysis-env.eba-qm3eriqm.eu-central-1.elasticbeanstalk.com', 'bitcoin-analyser.piotrmieczkowski.com', 'www.bitcoin-analyser.piotrmieczkowski.com']
 
 
 # Application definition
@@ -48,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'twitter_tag_analysis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'bitcoin_analyser',
+        'USER': 'Eter',
+        'PASSWORD': '!Most4321',
+        'HOST': 'bitcoin-analyser-eter.cn6vmy1z3emo.eu-central-1.rds.amazonaws.com',
+        'PORT': '5432'
     }
 }
 
@@ -130,7 +134,8 @@ STATICFILES_DIRS = (
 )
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

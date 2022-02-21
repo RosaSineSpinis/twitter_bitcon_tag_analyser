@@ -9,16 +9,44 @@ from .models import HourModel, MonthModel, DayModel  # YearModel, MinutesModel
 import threading
 from .apps import RunThread
 from django.utils import timezone
+from pathlib import Path
 
 
 class AuthenticationTweepy:
+    BASE_SOURCE = Path(__file__).resolve().parent
+
     def __init__(self):
-        self.consumer_key = os.environ.get('consumer_key')
-        self.consumer_secret = os.environ.get('consumer_secret')
-        self.access_token = os.environ.get('access_token')
-        self.access_token_secret = os.environ.get('access_token_secret')
-        self.bearer_token = os.environ.get('bearer_token')
+        # self.consumer_key = os.environ.get('consumer_key')
+        # self.consumer_secret = os.environ.get('consumer_secret')
+        # self.access_token = os.environ.get('access_token')
+        # self.access_token_secret = os.environ.get('access_token_secret')
+        # self.bearer_token = os.environ.get('bearer_token')
+        # self.callback_url = ''  # some url will be here
+        self.consumer_key = ""
+        self.consumer_secret = ""
+        self.access_token = ""
+        self.access_token_secret = ""
+        self.bearer_token = ""
         self.callback_url = ''  # some url will be here
+
+        with open(os.path.join(AuthenticationTweepy.BASE_SOURCE, '_twitter_api_keys.py')) as f:
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+                line = line.strip().split()
+                key_django_name = line[0].strip()
+                key_django = line[2].strip("\"")
+                if key_django_name == "consumer_key":
+                    self.consumer_key = key_django
+                elif key_django_name == "consumer_secret":
+                    self.consumer_secret = key_django
+                elif key_django_name == "access_token":
+                    self.access_token = key_django
+                elif key_django_name == "access_token_secret":
+                    self.access_token_secret = key_django
+                elif key_django_name == "bearer_token":
+                    self.bearer_token = key_django
 
     def authenticate(self):
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret, self.callback_url)
@@ -128,6 +156,7 @@ class StreamUserClient:
         self.me = self.api.me()
 
     def run_stream(self):
+        print("----------------------------------------------------run stream is working")
         # create object of the streaming class, tweets are processed by on_status
         tweets_listener = MyStreamListener(self.api, self.time_scheduler, self.stream_scheduler)
         # send object to the twitter stream, send authentication and MyStreamListener class
