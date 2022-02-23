@@ -172,7 +172,7 @@ function rePlotHandler() {
     /**
     when graphs is supposed to change, the function takes
     variable of the graph and change its parameters then update canvas
-    * */
+    **/
     console.log("rePlot is working")
     // let data = JSON.parse(dataStorage.getItem("data"));
     let data = null;

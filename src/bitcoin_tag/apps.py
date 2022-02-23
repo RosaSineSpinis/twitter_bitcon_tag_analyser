@@ -96,12 +96,12 @@ class StreamNewThread(Thread):
         # self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
         # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
 
-        # '''
-        # #### real part of the program
+        '''
+        #### real part of the program
         self.main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.day_task)  # rewrite database
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.month_task)
-        # '''
+        '''
 
         # schedule.every(50).seconds.do(my_stream.run_stream)
         # .minutes.do(StreamNewThread().start)
@@ -163,4 +163,4 @@ class BitcoinTagConfig(AppConfig):
             print("BitcoinTagConfig.ready works")
     #         # StreamNewThread().front_end_tests()  # only for test of the frontend
     #
-            StreamNewThread().start()
+            # StreamNewThread().start()
