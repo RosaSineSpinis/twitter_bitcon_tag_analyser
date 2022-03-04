@@ -118,7 +118,7 @@ class MakeTable extends ConvertDict{
                     chk.type = 'checkbox';
                     chk.id = "data--to--plot--checkbox";
                     chk.value = object["tag_name"];
-                    if(idx < 10) {
+                    if(idx < 10) { // created to look nice only first 10 is checked and printed
                         idx += 1;
                         chk.checked = true;
                         console.log("chk.checked = true;")
