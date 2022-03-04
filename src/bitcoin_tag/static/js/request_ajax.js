@@ -67,6 +67,7 @@ async function create_graphs(datasets) {
                   var ctx = document.getElementById('myChart')
                   let myChart = setChart(datasets, ctx)
                   charts_list.push(myChart)
+                  console.log("async function create_graphs works")
 }
 
 // export { dataStorage }
@@ -76,23 +77,43 @@ hatEvalData.click();
 
 
 function process_drawing_tasks(data) {
-                    // check if graph is already created if no destroy
-                    for (let i = 0; i < charts_list.length; i++) {
-                        charts_list[i].destroy()
-                        console.log("process_drawing_tasks: destroying")
-                    }
-                    charts_list = []
-                    create_graphs(data[0])
 
-                    // let dataStorage = window.sessionStorage;
+                    //here should be retyped function and first should be made table with 10 checkboxes ticked and rest of it should be empty
+                    // check if graph is already created if no destroy
+
+
+                        // let dataStorage = window.sessionStorage;
                     dataStorage.setItem("data", JSON.stringify(data))
                     let new_data = JSON.parse(dataStorage.getItem("data")) //
 
                     removeInputMenu()  // remove InputMenu when new dataset is send from backend
                     createInputOption(data) // creates new InputMenu
 
+
                     removeTableOfTags()  //remove table if table exists
                     let obj = new MakeTable(new_data[currentDataset], ['order', 'tag_name', 'number', 'date', 'time', 'checkbox'], ['#', 'Tag Name', 'Number', 'Date', 'Time', 'checkbox']);
                     obj.createTable(obj.convertDictData(), obj.list_of_keys, obj.list_of_names);
                     console.log("process_drawing_tasks: end of function")
+
+
+                    //from table draw graph!!!
+
+                    // for (let i = 0; i < charts_list.length; i++) {
+                    //     charts_list[i].destroy()
+                    //     console.log("process_drawing_tasks: destroying")
+                    // }
+                    // charts_list = []
+                    // create_graphs(data[data.length - 1]) // the last in the list
+                    //
+                    // // let dataStorage = window.sessionStorage;
+                    // dataStorage.setItem("data", JSON.stringify(data))
+                    // let new_data = JSON.parse(dataStorage.getItem("data")) //
+                    //
+                    // removeInputMenu()  // remove InputMenu when new dataset is send from backend
+                    // createInputOption(data) // creates new InputMenu
+                    //
+                    // removeTableOfTags()  //remove table if table exists
+                    // let obj = new MakeTable(new_data[currentDataset], ['order', 'tag_name', 'number', 'date', 'time', 'checkbox'], ['#', 'Tag Name', 'Number', 'Date', 'Time', 'checkbox']);
+                    // obj.createTable(obj.convertDictData(), obj.list_of_keys, obj.list_of_names);
+                    // console.log("process_drawing_tasks: end of function")
                 }

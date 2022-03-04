@@ -13,7 +13,7 @@ function createInputOption(data) {
     let idx = 0
     for (var i = data.length-1; i > -1; i--) {
         let opt = document.createElement('option');
-        console.log("data[i] ", data[i]);
+        // console.log("data[i] ", data[i]);
         opt.value = idx;
         let date_time = moment(data[i].tag_date + " " + data[i].tag_time)
         // console.log("createInputOption", date_time.format("Do, MM, YYYY, h:mm"))
