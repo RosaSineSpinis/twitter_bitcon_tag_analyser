@@ -86,15 +86,17 @@ class StreamNewThread(Thread):
         #     my_stream.run_stream()
         #     del my_stream
 
-        # '''
-        # #### for thest puropses only
-        # self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.front_end_tests)  # run stream
-        # '''
+        '''
+        #### for thest puropses only
+        self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.front_end_tests)  # run stream
+        '''
 
+        '''
         # scheduler for tests
-        # self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
+        self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
         # self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
         # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
+        '''
 
         '''
         #### real part of the program
@@ -163,4 +165,4 @@ class BitcoinTagConfig(AppConfig):
             print("BitcoinTagConfig.ready works")
     #         # StreamNewThread().front_end_tests()  # only for test of the frontend
     #
-            # StreamNewThread().start()
+            StreamNewThread().start()

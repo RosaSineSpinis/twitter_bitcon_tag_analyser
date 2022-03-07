@@ -15,9 +15,12 @@ from picklefield.fields import PickledObjectField
 #     def __str__(self):
 #         return f'{self.tag_date} {self.tag_time}'
 
+def default_semantic_analysis_dict():
+    return {0: 0, 1: 0, 2: 0}
 
 class MonthModel(models.Model):
     tag_dictionary = PickledObjectField()
+    semantic_analysis = PickledObjectField(default=default_semantic_analysis_dict)
     tag_date = models.DateField(auto_now_add=True)  # date of save
     tag_time = models.TimeField(auto_now_add=True)  # time of save
     tag_datetime = models.DateTimeField(auto_now_add=True)  #, blank=True, null=True)
@@ -30,6 +33,7 @@ class MonthModel(models.Model):
 
 class DayModel(models.Model):
     tag_dictionary = PickledObjectField()
+    semantic_analysis = PickledObjectField(default=default_semantic_analysis_dict)
     tag_date = models.DateField(auto_now_add=True)  # date of save
     tag_time = models.TimeField(auto_now_add=True)  # time of save
     tag_datetime = models.DateTimeField(auto_now_add=True)  #, blank=True, null=True)
@@ -42,6 +46,7 @@ class DayModel(models.Model):
 
 class HourModel(models.Model):
     tag_dictionary = PickledObjectField()  # dictionary of tags --> {#tagname: number}
+    semantic_analysis = PickledObjectField(default=default_semantic_analysis_dict)
     tag_date = models.DateField(auto_now_add=False)  # date of tag save
     tag_time = models.TimeField(auto_now_add=False)  # time of tag save
     tag_datetime = models.DateTimeField(auto_now_add=False)

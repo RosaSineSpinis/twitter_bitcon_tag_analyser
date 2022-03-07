@@ -10,6 +10,27 @@ import threading
 from .apps import RunThread
 from django.utils import timezone
 from pathlib import Path
+from textblob import TextBlob
+import re
+
+
+class TweetAnalyzer():
+    """
+    Functionality for analyzing and categorizing content from tweets.
+    """
+
+    def clean_tweet(self, tweet): #  removes all unnecessary signs from tweets
+        return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+
+    def analyze_sentiment(self, tweet):
+        analysis = TextBlob(self.clean_tweet(tweet))
+
+        if analysis.sentiment.polarity > 0:
+            return 1
+        elif analysis.sentiment.polarity == 0:
+            return 0
+        else:
+            return -1
 
 
 class AuthenticationTweepy:
@@ -61,6 +82,8 @@ class MyStreamListener(tweepy.StreamListener):
         self.histogram = dict()
         self.scheduler_time = scheduler_time
         self.stream_scheduler = scheduler
+        self.semantic_histogram = {0: 0, 1: 0, 2: 0}
+
     post_counter = 0  # static
 
     def push_to_database_hour(self):
@@ -68,6 +91,7 @@ class MyStreamListener(tweepy.StreamListener):
         print(self.histogram)
 
         obj = HourModel.objects.create(tag_dictionary=self.histogram,
+                                       semantic_analysis=self.semantic_histogram,
                                        tag_date=datetime.now(tz=timezone.utc).date(),
                                        tag_time=datetime.now(tz=timezone.utc).time(),
                                        tag_datetime=datetime.now(tz=timezone.utc))
@@ -125,6 +149,11 @@ class MyStreamListener(tweepy.StreamListener):
         if '#bitcoin' in tags_list:
             self.make_histogram(tags_list)  # should be done every 5 min
             # print(tweet.text)
+            tweet_analyser = TweetAnalyzer()
+            semantic_result = tweet_analyser.analyze_sentiment(tweet.text)
+            print("semantic analyser", tweet_analyser.analyze_sentiment(tweet.text))
+            # probably write code here...
+            self.semantic_histogram[semantic_result] = self.semantic_histogram.get(semantic_result, 0) + 1
 
     def on_error(self, status):
         print("Error detected")
