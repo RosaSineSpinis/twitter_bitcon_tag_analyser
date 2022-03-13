@@ -51,7 +51,7 @@
 </header>
 
 <div class="container-fluid">
-  <div class="row">
+    <div class="row">
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="position-sticky pt-3">
 
@@ -109,34 +109,50 @@
     </nav>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Histogram of Tags</h1>
+        <div class="row">
+            <div class="col-lg-2">
+                <div></div>
+            </div>
+            <div class="col-lg-8 d-flex justify-content-evenly align-items-center">
+                <div id="canvas_semantic_analysis">
+                    <canvas id="semantic_analysis_Chart" height="600"></canvas>
+                </div>
+                <div>
+                    <i id="mood-icon" class="size-mood-icon" data-feather="frown"></i>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div></div>
+            </div>
 
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
         </div>
-      </div>
-      <div id="canvas">
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-      </div>
-      <div class="d-flex justify-content-between">
-        <h2>Histogram of tags</h2>
-        <span id="button--rePlot--here"><input type="button" class="btn btn-outline-dark" value="Plot Histogram" id="button--rePlot"></span>
-      </div>
-      <div id="table--of--tags" class="table-responsive">
-      </div>
-
+        <div class="row">
+            <h1 class="h2">Histogram of Tags</h1>
+{#            <div class="btn-toolbar mb-2 mb-md-0">#}
+{#                <div class="btn-group me-2">#}
+{#                    <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>#}
+{#                    <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>#}
+{#                </div>#}
+{#            </div>#}
+            <div id="canvas">
+                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+            </div>
+            <div class="d-flex justify-content-between">
+                <h2>Number of tags</h2>
+                <span id="button--rePlot--here"><input type="button" class="btn btn-outline-dark" value="Plot Histogram" id="button--rePlot"></span>
+            </div>
+            <div id="table--of--tags" class="table-responsive">
+            </div>
+        </div>
     </main>
-  </div>
+    </div>
 </div>
 
 <script src="{% static 'js/request_ajax.js' %}"></script>
 <script src="{% static 'js/chart.js' %}"></script>
 <script src="{% static 'js/table_of_tags.js' %}"></script>
 <script src="{% static 'js/input_menu.js' %}"></script>
-
+<script src="{% static 'js/chart_pie.js' %}"></script>
+<script src="{% static 'js/semantic_indicator.js' %}"></script>
 
 {% endblock content %}

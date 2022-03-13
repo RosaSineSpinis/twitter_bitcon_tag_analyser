@@ -16,7 +16,7 @@ from picklefield.fields import PickledObjectField
 #         return f'{self.tag_date} {self.tag_time}'
 
 def default_semantic_analysis_dict():
-    return {0: 0, 1: 0, 2: 0}
+    return {0: 0, 1: 0, -1: 0}
 
 class MonthModel(models.Model):
     tag_dictionary = PickledObjectField()

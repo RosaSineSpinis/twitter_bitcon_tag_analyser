@@ -98,15 +98,16 @@ class StreamNewThread(Thread):
         # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
         '''
 
-        '''
         #### real part of the program
         self.main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.day_task)  # rewrite database
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.month_task)
-        '''
+
 
         # schedule.every(50).seconds.do(my_stream.run_stream)
         # .minutes.do(StreamNewThread().start)
+
+        # loop for tests - prints all nodes and schedulers
         # while True:
         #     all_jobs = main_scheduler.get_jobs()
         #     print("while loop working all_jobs", all_jobs)

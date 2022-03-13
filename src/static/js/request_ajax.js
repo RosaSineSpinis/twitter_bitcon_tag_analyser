@@ -14,6 +14,7 @@ document.body.addEventListener('click', function (event) {
         request.open(form.method, form.action, true);
 
         request.send(data_form);
+        console.log("data_form: ", data_form)
         // var dataStorage = window.sessionStorage
         // let currentDataset = 0
 
@@ -55,6 +56,7 @@ document.body.addEventListener('click', function (event) {
         });
         request.onerror = function() {
           // There was a connection error of some sort
+            console.log("request.onerror")
         };
 
     }
@@ -65,6 +67,7 @@ async function create_graphs(datasets) {
                   var ctx = document.getElementById('myChart')
                   let myChart = setChart(datasets, ctx)
                   charts_list.push(myChart)
+                  console.log("async function create_graphs works")
 }
 
 // export { dataStorage }
@@ -72,24 +75,85 @@ async function create_graphs(datasets) {
 var hatEvalData = document.getElementById("radioButton--hour");
 hatEvalData.click();
 
+function createSemanticChartPie(data){
+    console.log("createSemanticChartPie data", data)
+    data = {"0":2, "1":5, "-1":5}
+    var ctx = document.getElementById('semantic_analysis_Chart')
+    let myChart = setChartPie(data, ctx)
+    // charts_list.push(myChart)
+
+}
+
+function createSemanticIndicator(dataset){ //make new page
+    console.log("createSemanticIndicator function")
+    let _data_keys = []
+    let _data_values = []
+    _data_keys =  Object.keys(dataset);
+    _data_values = Object.values(dataset);
+    console.log("dataset[0]", dataset[0]);
+    console.log("dataset[1]", dataset[1]);
+    console.log("dataset[-1]", dataset[-1]);
+    let mood = dataset[0] + dataset[1] + dataset[-1]
+    if (dataset[-1] > dataset[1] && dataset[-1] > dataset[0]){
+        console.log("Mood is negative")
+    }
+    else if (dataset[1] > dataset[0] && dataset[1] > dataset[-1]){
+        console.log("Mood is positive")
+    }
+    else{
+        console.log("Mood is neutral")
+    }
+
+}
 
 function process_drawing_tasks(data) {
-                    // check if graph is already created if no destroy
-                    for (let i = 0; i < charts_list.length; i++) {
-                        charts_list[i].destroy()
-                        console.log("destroying")
-                    }
-                    charts_list = []
-                    create_graphs(data[0])
 
-                    // let dataStorage = window.sessionStorage;
-                    dataStorage.setItem("data", JSON.stringify(data))
-                    let new_data = JSON.parse(dataStorage.getItem("data")) //
+        // let dataStorage = window.sessionStorage;
+    dataStorage.setItem("data", JSON.stringify(data))
+    let new_data = JSON.parse(dataStorage.getItem("data")) //
 
-                    removeInputMenu()  // remove InputMenu when new dataset is send from backend
-                    createInputOption(data) // creates new InputMenu
+    test_dict = {0:5, 1:5}
+    test_dict[-1] = 5
+    createSemanticChartPie(new_data[currentDataset]["semantic_analysis"])
+    createSemanticIndicator(test_dict)
 
-                    removeTableOfTags()  //remove table if table exists
-                    let obj = new MakeTable(new_data[currentDataset], ['order', 'tag_name', 'number', 'date', 'time', 'checkbox'], ['#', 'Tag Name', 'Number', 'Date', 'Time', 'checkbox']);
-                    obj.createTable(obj.convertDictData(), obj.list_of_keys, obj.list_of_names);
-                }
+    removeInputMenu()  // remove InputMenu when new dataset is send from backend
+    createInputOption(data) // creates new InputMenu
+
+
+    removeTableOfTags()  //remove table if table exists
+    let obj = new MakeTable(new_data[currentDataset], ['order', 'tag_name', 'number', 'date', 'time', 'checkbox'], ['#', 'Tag Name', 'Number', 'Date', 'Time', 'checkbox']);
+    obj.createTable(obj.convertDictData(), obj.list_of_keys, obj.list_of_names);
+    console.log("process_drawing_tasks: end of function")
+
+    for (let i = 0; i < charts_list.length; i++) {
+        charts_list[i].destroy()
+        console.log("process_drawing_tasks: destroying")
+    }
+    charts_list = []
+    create_graphs(data[data.length - 1]) // the last in the list // here it is immediately replotted as only 10 graphs are plotted
+
+    rePlotHandler()
+
+    //old version of the graph
+    // check if graph is already created if no destroy
+
+    // for (let i = 0; i < charts_list.length; i++) {
+    //     charts_list[i].destroy()
+    //     console.log("process_drawing_tasks: destroying")
+    // }
+    // charts_list = []
+    // create_graphs(data[data.length - 1]) // the last in the list
+    //
+    // // let dataStorage = window.sessionStorage;
+    // dataStorage.setItem("data", JSON.stringify(data))
+    // let new_data = JSON.parse(dataStorage.getItem("data")) //
+    //
+    // removeInputMenu()  // remove InputMenu when new dataset is send from backend
+    // createInputOption(data) // creates new InputMenu
+    //
+    // removeTableOfTags()  //remove table if table exists
+    // let obj = new MakeTable(new_data[currentDataset], ['order', 'tag_name', 'number', 'date', 'time', 'checkbox'], ['#', 'Tag Name', 'Number', 'Date', 'Time', 'checkbox']);
+    // obj.createTable(obj.convertDictData(), obj.list_of_keys, obj.list_of_names);
+    // console.log("process_drawing_tasks: end of function")
+}

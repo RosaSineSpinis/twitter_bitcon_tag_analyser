@@ -23,7 +23,7 @@ class ConvertDict {
 
 
   convertDictData() {
-
+    console.log("convertDictData: beggining of the function")
     /** creates list of dictionaries (objects)
     data we have
        "tag_date": "2021-09-22",
@@ -95,7 +95,6 @@ class MakeTable extends ConvertDict{
                 chk.id = "checkbox--master";
                 chk.value = "toggle";
                 chk.checked = true;
-
             } else {
                 th.appendChild(document.createTextNode(fieldTitle));
                 }
@@ -107,6 +106,7 @@ class MakeTable extends ConvertDict{
         // rest of the table is created
         let tbdy = document.createElement('tbody');
         let tr = document.createElement('tr');
+        let idx = 0;
         objectArray.forEach((object) => { // loop over list of dictionaries
             let tr = document.createElement('tr');
             // one full row of data
@@ -118,12 +118,21 @@ class MakeTable extends ConvertDict{
                     chk.type = 'checkbox';
                     chk.id = "data--to--plot--checkbox";
                     chk.value = object["tag_name"];
-                    chk.checked = true;
+                    if(idx < 10) { // created to look nice only first 10 is checked and printed
+                        idx += 1;
+                        chk.checked = true;
+                        console.log("chk.checked = true;")
+                    }
+                    else{
+                        chk.checked = false;
+                        console.log("chk.checked = false;")
+                    }
                 } else {
                     td.appendChild(document.createTextNode(object[field]));
                     tr.appendChild(td);
                     }
-                });
+
+            });
             tbdy.appendChild(tr);
             });
         tbl.appendChild(tbdy);
@@ -172,7 +181,7 @@ function rePlotHandler() {
     /**
     when graphs is supposed to change, the function takes
     variable of the graph and change its parameters then update canvas
-    **/
+    * */
     console.log("rePlot is working")
     // let data = JSON.parse(dataStorage.getItem("data"));
     let data = null;
