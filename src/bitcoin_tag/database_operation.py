@@ -6,8 +6,8 @@ import pprint
 
 class CreateEntry:
     def __init__(self):
-        print("constructor CreateEntryDay is working")
-        self.histogram = {}
+        print("constructor CreateEntry is working")
+        self.histogram = dict()
         self.beginning_time = None
         self.ending_time = None
         self.beginning_date = None
@@ -15,62 +15,43 @@ class CreateEntry:
         self.objs = None
         self.beginning_datetime = None
         self.ending_datetime = None
+        self.hist_semantic_analysis = {-1: 0, 0: 0, 1: 0}
 
-    def create_hist(self):
-        """ add instance of model to the class self.objs = Model()"""
-        # change to equal date
-        # objs = HourModel.objects.filter(tag_date__gte=datetime.now().date() - timedelta(days=1)).all()  # use in the
-        # final version
-        # objs = HourModel.objects.filter(tag_date__gte=datetime.now().date() - timedelta(minutes=3)).all() #  test 1
-        # self._objs = None
-        # beg_time = 0
-        # end_time = 0
+    def _set_objects(self):
+        pass
+
+    def _set_time_entry(self):
         if self.objs:
-            print("We are in the if")
+            print("We are in the if _set_time_entry")
+            print("self.objs _set_time_entry", self.objs)
             self.beginning_datetime = self.objs.first().tag_datetime
-            print("self.beginning_datetime", self.beginning_date)
+            print("self.beginning_datetime", self.beginning_datetime)
             self.ending_datetime = self.objs.last().tag_datetime
-            print("self.beginning_datetime", self.beginning_date)
+            print("self.ending_datetime", self.ending_datetime)
 
-            # self.beginning_date = self.objs.first().tag_date
-            # print("self.beginning_date", self.beginning_date)
-            # self.ending_date = self.objs.last().tag_date
-            # print("self.ending_date", self.ending_date)
-            # self.beginning_time = self.objs.first().tag_time
-            # print("self.beginning_time", self.beginning_time)
-            # self.ending_time = self.objs.last().tag_time
-            # print("self.ending_time", self.ending_time)
+    def _set_hist(self):
+        """ add instance of model to the class self.objs = Model()"""
+        if self.objs:
+            print("We are in the if _set_hist")
+            print("self.objs _set_hist", self.objs)
             for obj in self.objs:
                 for key, value in obj.tag_dictionary.items():
                     self.histogram[key] = self.histogram.get(key, 0) + value
 
-        print("_create_hist_day eof", self.histogram,
+    def _set_hist_semantic_analysis(self):
+        if self.objs:
+            print("We are in the if _set_hist_semantic_analysis")
+            print("self.objs _set_hist_semantic_analysis", self.objs)
+            for obj in self.objs:
+                for key, value in obj.semantic_analysis.items():
+                    self.hist_semantic_analysis[key] = self.hist_semantic_analysis.get(key, 0) + value
+
+        print("__created_histograms", self.histogram,
+              self.hist_semantic_analysis,
               self.beginning_time,
               self.ending_time,
               self.beginning_date,
               self.ending_date)
-
-
-        # self.beginning_date = objs.first()  # here all should have the same dates as we take 1 day
-        # print("self.beginning_day = objs.first()", self.beginning_date)
-        # if self.beginning_date:
-        #     self.beginning_date = objs.first().tag_date
-        #     print("objs.first().tag_date = objs.first().tag_date", self.beginning_date)
-        # self.ending_date = objs.last()  # here all should have the same dates as we take 1 day
-        # print("self.ending_day = objs.first()", self.ending_date)
-        # if self.ending_date:
-        #     self.ending_date = objs.last().tag_date
-        #     print("self.ending_day = objs.first().tag_date", self.ending_date)
-        # for obj in objs:
-        #     print("obj", obj)
-        #     if not beg_time or obj.tag_time < beg_time:
-        #          beg_time = obj.tag_time
-        #     if not end_time or obj.tag_time > end_time:
-        #          end_time = obj.tag_time
-        #     for key, value in obj.tag_dictionary.items():
-        #         self.histogram[key] = self.histogram.get(key, 0) + value
-        #     self.beginning_time = beg_time
-        #     self.ending_time = end_time
 
     def create_entry(self):
         """overload this method"""
@@ -83,30 +64,49 @@ class CreateEntryDay(CreateEntry):
         print("constructor CreateEntryDay is working")
         super().__init__()
 
-    def create_hist(self):
-        print("create_hist_month is working")
-        self.objs = HourModel.objects.filter(tag_datetime__lte=datetime.now(tz=timezone.utc) - timedelta(hours=1))\
-            .filter(tag_datetime__gt=datetime.now(tz=timezone.utc) - timedelta(hours=2))\
+    def _set_objects(self):
+        self.objs = HourModel.objects.filter(tag_datetime__lte=datetime.now(tz=timezone.utc) - timedelta(days=1))\
+            .filter(tag_datetime__gt=datetime.now(tz=timezone.utc) - timedelta(days=2))\
             .order_by('tag_datetime')
 
-        print("objects in the scope create_hist", self.objs)
-        super().create_hist()
-        return self.objs
+        print("objects in the scope CreateEntryDay", self.objs)
+
+    # def set_hist(self):
+    #     super().set_hist()
+    #     return self.objs
+
+    # def set_hist_semantic_analysis(self):
+    #     pass
 
     def create_entry(self):
-        self.create_hist()  # creates self.histogram
+        print("create_entry function")
+        self._set_objects()
+        self._set_time_entry()
+        self._set_hist()  # creates self.histogram
+        self._set_hist_semantic_analysis()
+        print("create_entry self.objs", self.objs)
+        print("self.hist_semantic_analysis", self.hist_semantic_analysis)
+        print("self.histogram", self.histogram)
         print("self.beginning_date", self.beginning_date)
         print("self.beginning_time", self.beginning_time)
         print("self.ending_date", self.ending_date)
         print("self.ending_time",  self.ending_time)
+        print("self.beginning_datetime", self.beginning_datetime)
+        print("self.ending_datetime", self.ending_datetime)
 
-        print("------------------------------------------------------------Day Model obj is created")
-        print(timezone.localtime())
-        obj = DayModel.objects.create(tag_dictionary=self.histogram,
-                                      beginning_datetime=self.beginning_datetime,
-                                      # (datetime.combine(self.beginning_date, self.beginning_time))
-                                      ending_datetime=self.ending_datetime)
-                                      # (datetime.combine(self.ending_date, self.ending_time))
+        try:
+            obj = DayModel.objects.create(tag_dictionary=self.histogram,
+                                          semantic_analysis=self.hist_semantic_analysis,
+                                          beginning_datetime=self.beginning_datetime,
+                                          # (datetime.combine(self.beginning_date, self.beginning_time))
+                                          ending_datetime=self.ending_datetime)
+                                          # (datetime.combine(self.ending_date, self.ending_time))
+            print("------------------------------------------------------------Day Model obj was created")
+
+        except ValueError:
+            print("An ValueError exception occurred")
+        except BaseException:
+            print("something wrong!!! while object is created")
 
         # try:
         #     print("create_day_entry obj eof", obj)
@@ -117,17 +117,21 @@ class CreateEntryDay(CreateEntry):
 
 
 class CreateEntryMonth(CreateEntry):
-    def create_hist(self):
+
+    def _set_objects(self):
         print("create_hist_month is working")
         self.objs = DayModel.objects.filter(tag_datetime__lte=datetime.now(tz=timezone.utc) - relativedelta(months=1))\
             .filter(tag_datetime__gt=datetime.now(tz=timezone.utc) - relativedelta(months=2))\
             .order_by('tag_datetime')
             # .order_by('tag_date', 'tag_time')  # test 2
-        super().create_hist()
+        print("_set_objects - ", self.objs)
         return self.objs
 
     def create_entry(self):  # think about class
-        objs = self.create_hist()
+        self._set_objects()
+        self._set_time_entry()
+        self._set_hist()  # creates self.histogram
+        self._set_hist_semantic_analysis()
         print("self.beginning_date", self.beginning_date)
         print("self.beginning_time", self.beginning_time)
         print("self.ending_date", self.ending_date)
@@ -136,6 +140,7 @@ class CreateEntryMonth(CreateEntry):
         try:
             print("------------------------------------------------------------Month Model obj is created")
             obj = MonthModel.objects.create(tag_dictionary=self.histogram,
+                                            semantic_analysis=self._set_hist_semantic_analysis(),
                                             beginning_datetime=(datetime.combine(self.beginning_date, self.beginning_time)),
                                             ending_datetime=(datetime.combine(self.ending_date, self.ending_time)))
         except ValueError:

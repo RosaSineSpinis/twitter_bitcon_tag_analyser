@@ -13,14 +13,16 @@ class HourModelTestCase(TestCase):
         super(HourModelTestCase, cls).setUpClass()
         pass
 
-    def setUpHourDb(self, tag_dict, tag_datetime):
+    def _setUpHourDb(self, tag_dict, semantic_analysis, tag_datetime):
+        print("setUpHourDb working")
         HourModel.objects.create(tag_dictionary=tag_dict,
+                                 semantic_analysis=semantic_analysis,
                                  tag_date=tag_datetime.date(),
                                  tag_time=tag_datetime.time(),
                                  tag_datetime=tag_datetime)
 
     def setUp(self) -> None:
-        print("setUp working")
+        print("\n\nsetUp working")
         self.cutoff = 10
         self.time_list = []
         self.date_time_now = datetime.datetime.now(tz=timezone.utc)
@@ -84,46 +86,54 @@ class HourModelTestCase(TestCase):
         # early_date_month_1 = datetime.datetime.now(tz=timezone.utc) - relativedelta(months=2)
         # self.time_list.append(early_date_month_1)
         test_tag_dict = {"#bitcoin": 1, "#eth": 2}
+        semantic_analysis = {-1: 5, 0: 2, 1: 4}
 
         for _time in self.time_list:
-            self.setUpHourDb(test_tag_dict, _time)
+            self._setUpHourDb(test_tag_dict, semantic_analysis, _time)
 
     def tearDown(self) -> None:
         print("tearDown working")
 
     def create_hourmodel(self,
                          tag_dictionary={"#bitcoin": 1, "#eth": 1, "#smth": 1},
+                         semantic_analysis={-1: 5, 0: 2, 1: 4},
                          tag_date=datetime.datetime.now(tz=timezone.utc).date(),
                          tag_time=datetime.datetime.now(tz=timezone.utc).time(),
                          tag_datetime=datetime.datetime.now(tz=timezone.utc)):
-        print("create_hourmodel")
+        print("\ncreate_hourmodel is working\n")
         return HourModel.objects.create(tag_dictionary=tag_dictionary,
+                                        semantic_analysis=semantic_analysis,
                                         tag_date=self.date_time_now.date(),
                                         tag_time=self.date_time_now.time(),
                                         tag_datetime=self.date_time_now)
 
-    def test_hour_model_creation(self):
-        print("test_hour_model_creation")
-        e = self.create_hourmodel()
-        self.assertTrue(isinstance(e, HourModel))
-        self.assertTrue(isinstance(e.tag_date, datetime.date))
-        self.assertTrue(isinstance(e.tag_time, datetime.time))
-        self.assertTrue(isinstance(e.tag_datetime, datetime.datetime))
+    # def test_hour_model_creation(self):
+    #     print("\ntest_hour_model_creation is working\n")
+    #     e = self.create_hourmodel()
+    #     self.assertTrue(isinstance(e, HourModel))
+    #     self.assertTrue(isinstance(e.tag_date, datetime.date))
+    #     self.assertTrue(isinstance(e.tag_time, datetime.time))
+    #     self.assertTrue(isinstance(e.tag_datetime, datetime.datetime))
+    #     self.assertEqual(HourModel.objects.all().first().semantic_analysis, {-1: 5, 0: 2, 1: 4})
 
     def test_day_model_creation(self):
-        print("test_day_model_creation")
+        print("\ntest_day_model_creation is working\n")
         print("hOUR MODEL ALL", HourModel.objects.all())
         # obj = CreateEntryDay()
         # obj.create_entry()
         print("DayModel.objects.all().count()", DayModel.objects.count())
-        CreateEntryDay().create_entry()
+        objs = CreateEntryDay().create_entry()
+        print("objs", objs)
         self.assertEqual(DayModel.objects.all().count(), 1)  # check whether there is one day old dictionary in the database
-        self.assertEqual(DayModel.objects.all().first().tag_dictionary, {"#bitcoin": 3, "#eth": 6})
+        self.assertEqual(DayModel.objects.all().first().tag_dictionary, {"#bitcoin": 2, "#eth": 4})
+        print("DayModel value of semantic", DayModel.objects.all().first().semantic_analysis)
+        print("DayModel value of semantic", DayModel.objects.all().last().semantic_analysis)
+        self.assertEqual(DayModel.objects.all().first().semantic_analysis, {-1: 10, 0: 4, 1: 8})
         # there should be precisely 2 fitting entries in hourmodel
 
 
     def test_month_model_creation(self):
-        print("test_month_model_creation")
+        print("\ntest_month_model_creation\n")
     # test delete hours model with default argument
     # test delete hours model with custom argument
 
@@ -132,17 +142,22 @@ class HourModelTestCase(TestCase):
 
     def test_delete_hour_model_default(self):
         """after cutoff time, entries should be removed"""
+        print("\ntest_delete_hour_model_default is working\n")
         self.assertEqual(HourModel.objects.count(), self.number_entries)
         RemoveHourEntries().remove_entries()
         self.assertEqual(HourModel.objects.count(), 10)
 
     def test_delete_hour_model_custom(self):
         """after cutoff time, entries should be removed"""
+        print("\ntest_delete_hour_model_custom is working\n")
+
         RemoveHourEntries().remove_entries(self.date_time_now - datetime.timedelta(days=1))
         self.assertEqual(HourModel.objects.count(), 7)  # should be one removed
-
-    def setUpDayDb(self, tag_dict, tag_datetime):
+##########################
+    def _setUpDayDb(self, tag_dict, semantic_analysis, tag_datetime):
+        print("\n_setUpDAYDb is working\n")
         DayModel.objects.create(tag_dictionary=tag_dict,
+                                semantic_analysis=semantic_analysis,
                                 tag_date=tag_datetime.date(),
                                 tag_time=tag_datetime.time(),
                                 tag_datetime=tag_datetime,
@@ -150,6 +165,7 @@ class HourModelTestCase(TestCase):
                                 ending_datetime=tag_datetime)
 
     def populate_day_database(self):
+        print("\npopulate_day_database is working\n")
         # minutes, hours, days, months
         self.time_interval_day_model = [[0, 0, 1, 0],  # 1
                                         [0, 0, 5, 0],  # 2
@@ -172,8 +188,9 @@ class HourModelTestCase(TestCase):
                                             - relativedelta(months=interval[3]))
 
         test_tag_dict = {"#bitcoin": 1, "#eth": 2}
+        semantic_analysis = {-1: 5, 0: 2, 1: 4}
         for _time in self.time_list_day_model:
-            self.setUpDayDb(test_tag_dict, _time)
+            self._setUpDayDb(test_tag_dict, semantic_analysis, _time)
 
     def test_delete_day_model_default(self):
         """after cutoff time, entries should be removed"""

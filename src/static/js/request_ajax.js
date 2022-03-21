@@ -84,27 +84,6 @@ function createSemanticChartPie(data){
 
 }
 
-function createSemanticIndicator(dataset){ //make new page
-    console.log("createSemanticIndicator function")
-    let _data_keys = []
-    let _data_values = []
-    _data_keys =  Object.keys(dataset);
-    _data_values = Object.values(dataset);
-    console.log("dataset[0]", dataset[0]);
-    console.log("dataset[1]", dataset[1]);
-    console.log("dataset[-1]", dataset[-1]);
-    let mood = dataset[0] + dataset[1] + dataset[-1]
-    if (dataset[-1] > dataset[1] && dataset[-1] > dataset[0]){
-        console.log("Mood is negative")
-    }
-    else if (dataset[1] > dataset[0] && dataset[1] > dataset[-1]){
-        console.log("Mood is positive")
-    }
-    else{
-        console.log("Mood is neutral")
-    }
-
-}
 
 function process_drawing_tasks(data) {
 
@@ -112,10 +91,10 @@ function process_drawing_tasks(data) {
     dataStorage.setItem("data", JSON.stringify(data))
     let new_data = JSON.parse(dataStorage.getItem("data")) //
 
-    test_dict = {0:5, 1:5}
-    test_dict[-1] = 5
+    test_dict = {0:1, 1:5}
+    test_dict[-1] = 1
     createSemanticChartPie(new_data[currentDataset]["semantic_analysis"])
-    createSemanticIndicator(test_dict)
+    createSemanticIndicator(new_data[currentDataset]["semantic_analysis"])
 
     removeInputMenu()  // remove InputMenu when new dataset is send from backend
     createInputOption(data) // creates new InputMenu

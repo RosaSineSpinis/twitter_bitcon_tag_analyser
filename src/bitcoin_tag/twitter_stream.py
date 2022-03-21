@@ -82,7 +82,7 @@ class MyStreamListener(tweepy.StreamListener):
         self.histogram = dict()
         self.scheduler_time = scheduler_time
         self.stream_scheduler = scheduler
-        self.semantic_histogram = {0: 0, 1: 0, 2: 0}
+        self.semantic_histogram = {-1: 0, 0: 0, 1: 0}
 
     post_counter = 0  # static
 
@@ -96,8 +96,10 @@ class MyStreamListener(tweepy.StreamListener):
                                        tag_time=datetime.now(tz=timezone.utc).time(),
                                        tag_datetime=datetime.now(tz=timezone.utc))
 
+        print("histogram state after push_to_database_hour", self.histogram, self.semantic_histogram)
         self.histogram = dict()
-        print("histogram state after push_to_database_hour", self.histogram)
+        self.semantic_histogram = dict()
+        print("histogram state after push_to_database_hour", self.histogram, self.semantic_histogram)
         # now = datetime.now().time()  # time object
         # print("now =", now)
         # schedule.cancel_job(stream_job)
@@ -152,7 +154,6 @@ class MyStreamListener(tweepy.StreamListener):
             tweet_analyser = TweetAnalyzer()
             semantic_result = tweet_analyser.analyze_sentiment(tweet.text)
             print("semantic analyser", tweet_analyser.analyze_sentiment(tweet.text))
-            # probably write code here...
             self.semantic_histogram[semantic_result] = self.semantic_histogram.get(semantic_result, 0) + 1
 
     def on_error(self, status):

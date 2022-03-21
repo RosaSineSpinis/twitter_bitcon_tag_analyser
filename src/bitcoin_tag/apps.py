@@ -90,19 +90,19 @@ class StreamNewThread(Thread):
         #### for thest puropses only
         self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.front_end_tests)  # run stream
         '''
-
         '''
         # scheduler for tests
         self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
         # self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
         # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
         '''
-
-        #### real part of the program
+        # '''
+        # ### real part of the program
         self.main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.day_task)  # rewrite database
-        self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.month_task)
-
+        self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.month_task)  # every day check
+        # whether it is a new month
+        # '''
 
         # schedule.every(50).seconds.do(my_stream.run_stream)
         # .minutes.do(StreamNewThread().start)
@@ -144,7 +144,7 @@ class StreamNewThread(Thread):
             all_jobs = self.main_scheduler.get_jobs()
             # print("while loop working all_jobs", all_jobs)
             # for idx, job in enumerate(all_jobs):
-            #     print("idx ", idx, "job ", job)
+            #     print("\nidx ", idx, "job ", job)
             self.main_scheduler.run_pending()
             time.sleep(1)
             # for thread in threading.enumerate():
