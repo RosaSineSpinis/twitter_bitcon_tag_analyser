@@ -213,6 +213,27 @@ function rePlotHandler() {
     // console.log("createInputOption", date_time.format("Do, MM, YYYY, h:mm"))
     date_time = date_time.format("Do, MM, YYYY, h:mm");
 
+    // destroy graph - pie
+    var element = document.getElementById("semantic_analysis_Chart");
+    element.parentNode.removeChild(element);
+
+    // create inner element
+    var element = document.getElementById("canvas_semantic_analysis");
+    element.innerHTML = "<canvas id=\"semantic_analysis_Chart\" height=\"600\"></canvas>\n"
+    //create element
+    document.getElementById('semantic_analysis_Chart')
+    createSemanticChartPie(data["semantic_analysis"])
+
+    // destroy indicator
+    var element = document.getElementById("mood-icon");
+    element.parentNode.removeChild(element);
+    // create inner element
+    var element = document.getElementById("parent-mood-icon");
+    element.innerHTML = "<i id=\"mood-icon\" class=\"size-mood-icon\" data-feather=\"meh\"></i>"
+    createSemanticIndicator(data["semantic_analysis"])
+
+
+
     // config graph
     tagsChart.data.datasets[0].label = date_time
     tagsChart.data.datasets[0].data = Object.values(data["dictionary_tags"])

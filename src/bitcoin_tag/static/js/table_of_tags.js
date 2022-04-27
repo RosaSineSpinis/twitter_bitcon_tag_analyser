@@ -223,6 +223,13 @@ function rePlotHandler() {
     //create element
     document.getElementById('semantic_analysis_Chart')
     createSemanticChartPie(data["semantic_analysis"])
+
+    // destroy indicator
+    var element = document.getElementById("mood-icon");
+    element.parentNode.removeChild(element);
+    // create inner element
+    var element = document.getElementById("parent-mood-icon");
+    element.innerHTML = "<i id=\"mood-icon\" class=\"size-mood-icon\" data-feather=\"meh\"></i>"
     createSemanticIndicator(data["semantic_analysis"])
 
 

@@ -166,4 +166,4 @@ class BitcoinTagConfig(AppConfig):
             print("BitcoinTagConfig.ready works")
     #         # StreamNewThread().front_end_tests()  # only for test of the frontend
     #
-            StreamNewThread().start()
+            # StreamNewThread().start()

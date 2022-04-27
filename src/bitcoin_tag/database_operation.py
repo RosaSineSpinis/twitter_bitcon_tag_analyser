@@ -65,8 +65,8 @@ class CreateEntryDay(CreateEntry):
         super().__init__()
 
     def _set_objects(self):
-        self.objs = HourModel.objects.filter(tag_datetime__lte=datetime.now(tz=timezone.utc) - timedelta(days=1))\
-            .filter(tag_datetime__gt=datetime.now(tz=timezone.utc) - timedelta(days=2))\
+        self.objs = HourModel.objects.filter(tag_datetime__lte=datetime.now(tz=timezone.utc) - timedelta(days=0))\
+            .filter(tag_datetime__gt=datetime.now(tz=timezone.utc) - timedelta(days=1))\
             .order_by('tag_datetime')
 
         print("objects in the scope CreateEntryDay", self.objs)
@@ -184,11 +184,15 @@ class RemoveDayEntries(RemoveEntries):
 
     def remove_entries(self, time_cutoff=datetime.now(tz=timezone.utc)-relativedelta(months=1)):
         self.cutoff_datetime = time_cutoff
-        e = DayModel.objects.filter(tag_datetime__lt=self.cutoff_datetime)
-        i = DayModel.objects.all()
-        [print(el) for el in i]
-        print("e")
-        [print(el) for el in e]
+        # e = DayModel.objects.filter(tag_datetime__lt=self.cutoff_datetime)
+        # i = DayModel.objects.all()
+        # [print(el) for el in i]
+        # print("e")
+        # [print(el) for el in e]
+        print("self.cutoff_datetime ", self.cutoff_datetime)
+        entities = DayModel.objects.filter(tag_datetime__lt=self.cutoff_datetime)
+        for e in entities:
+            print("DayModel object to remove", e)
         DayModel.objects.filter(tag_datetime__lt=self.cutoff_datetime).delete()
-        print("RemoveDayEntries database is working")
+        # print("RemoveDayEntries database is working")
 

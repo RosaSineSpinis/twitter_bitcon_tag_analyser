@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 from picklefield.fields import PickledObjectField
+from django.utils import timezone
 
 
 # class YearModel(models.Model):
@@ -21,9 +22,9 @@ def default_semantic_analysis_dict():
 class MonthModel(models.Model):
     tag_dictionary = PickledObjectField()
     semantic_analysis = PickledObjectField(default=default_semantic_analysis_dict)
-    tag_date = models.DateField(auto_now_add=True)  # date of save
-    tag_time = models.TimeField(auto_now_add=True)  # time of save
-    tag_datetime = models.DateTimeField(auto_now_add=True)  #, blank=True, null=True)
+    tag_date = models.DateField(default=timezone.now)  # date of save
+    tag_time = models.TimeField(default=timezone.now)  # time of save
+    tag_datetime = models.DateTimeField(default=timezone.now)  #, blank=True, null=True)
     beginning_datetime = models.DateTimeField(blank=False)  # comes from HourModel the earliest object
     ending_datetime = models.DateTimeField(blank=False)  # comes from HourModel the latest object
 
@@ -36,7 +37,7 @@ class DayModel(models.Model):
     semantic_analysis = PickledObjectField(default=default_semantic_analysis_dict)
     tag_date = models.DateField(auto_now_add=True)  # date of save
     tag_time = models.TimeField(auto_now_add=True)  # time of save
-    tag_datetime = models.DateTimeField(auto_now_add=True)  #, blank=True, null=True)
+    tag_datetime = models.DateTimeField(default=False)  #, blank=True, null=True)
     beginning_datetime = models.DateTimeField(blank=False, null=True)  # comes from HourModel the earliest object
     ending_datetime = models.DateTimeField(blank=False, null=True)  # comes from HourModel the latest object
 
