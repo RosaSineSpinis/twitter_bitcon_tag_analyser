@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = key_django
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'bitcoin-analysis-env.eba-qm3eriqm.eu-central-1.elasticbeanstalk.com', 'bitcoin-analyser.piotrmieczkowski.com', 'www.bitcoin-analyser.piotrmieczkowski.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'django-env.eba-dp5ahnya.eu-central-1.elasticbeanstalk.com', 'bitcoin-analyser.piotrmieczkowski.com', 'www.bitcoin-analyser.piotrmieczkowski.com']
 
 
 # Application definition
@@ -79,15 +80,17 @@ WSGI_APPLICATION = 'twitter_tag_analysis.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+with open("Secret_Key.json", "r") as read_content:
+    db_keys = json.load(read_content)
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bitcoin_analyser',
-        'USER': 'Eter',
-        'PASSWORD': '!Most4321',
-        'HOST': 'bitcoin-analyser-eter.cn6vmy1z3emo.eu-central-1.rds.amazonaws.com',
-        'PORT': '5432'
+        'ENGINE': db_keys["ENGINE"],
+        'NAME': db_keys['NAME'],
+        'USER': db_keys['USER'],
+        'PASSWORD': db_keys['PASSWORD'],
+        'HOST': db_keys['HOST'],
+        'PORT': db_keys['PORT']
     }
 }
 

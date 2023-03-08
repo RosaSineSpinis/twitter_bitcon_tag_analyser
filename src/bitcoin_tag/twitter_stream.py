@@ -96,10 +96,10 @@ class MyStreamListener(tweepy.StreamListener):
                                        tag_time=datetime.now(tz=timezone.utc).time(),
                                        tag_datetime=datetime.now(tz=timezone.utc))
 
-        print("histogram state after push_to_database_hour", self.histogram, self.semantic_histogram)
+        print("state of histograms state after push_to_database_hour", self.histogram, self.semantic_histogram)
         self.histogram = dict()
         self.semantic_histogram = dict()
-        print("histogram state after push_to_database_hour", self.histogram, self.semantic_histogram)
+        print("state of histograms should be empty push_to_database_hour function", self.histogram, self.semantic_histogram)
         # now = datetime.now().time()  # time object
         # print("now =", now)
         # schedule.cancel_job(stream_job)
@@ -197,7 +197,7 @@ class StreamUserClient:
 
         # time.sleep(301)  # after time start disconnecting stream
         time.sleep(self.time_disconnect)  # after time start disconnecting stream in seconds
-        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^stream.filter end")
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^stream.filter has ended")
         self.stream_scheduler.clear('stream_job')
         stream.disconnect()
 

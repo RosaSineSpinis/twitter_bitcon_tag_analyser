@@ -90,15 +90,15 @@ class StreamNewThread(Thread):
         #### for thest puropses only
         self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.front_end_tests)  # run stream
         '''
-        '''
+        # RunThread.run_threaded(self.run_stream)  # just thread without scheduler, start it separately for test
         # scheduler for tests
-        self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
+        # self.main_scheduler.every(40).seconds.do(RunThread.run_threaded, self.run_stream)  # run stream
         # self.main_scheduler.every(120).seconds.do(RunThread.run_threaded, self.day_task)  # rewrite database
         # self.main_scheduler.every(240).seconds.do(RunThread.run_threaded, self.month_task)  # rewrite database
-        '''
+
         # '''
         # ### real part of the program
-        self.main_scheduler.every().hour.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
+        self.main_scheduler.every(4).hours.at(":01").do(RunThread.run_threaded, self.run_stream)  # run stream
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.day_task)  # rewrite database
         self.main_scheduler.every().day.at("00:10").do(RunThread.run_threaded, self.month_task)  # every day check
         # whether it is a new month
@@ -134,7 +134,7 @@ class StreamNewThread(Thread):
     def run_stream(self):
         from .twitter_stream import StreamUserClient
         print("run_stream function, hour task")
-        my_stream = StreamUserClient(300, self.main_scheduler)  # scheduler will work for 300 sec
+        my_stream = StreamUserClient(30, self.main_scheduler)  # scheduler will work for 300 sec
         my_stream.run_stream()
         del my_stream
 
@@ -166,4 +166,5 @@ class BitcoinTagConfig(AppConfig):
             print("BitcoinTagConfig.ready works")
     #         # StreamNewThread().front_end_tests()  # only for test of the frontend
     #
-            # StreamNewThread().start()
+            StreamNewThread().start()
+
